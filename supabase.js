@@ -24,15 +24,21 @@ function loadEnv(dir) {
  * @param {Array} orderRows      tb_sales_order 에 넣을 행들
  * @param {Array} itemsByExtId   [{ ext: "platform|external_order_id", items: [...] }]
  */
+// 접속 문자열은 여러 이름으로 받는다 (사용자 .env 명명 차이 대응)
+function getDbUrl() {
+  return process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL || process.env.POSTGRES_URL || "";
+}
+
 async function syncToSupabase(orderRows, itemsByExtId) {
   if (!orderRows.length) { console.log("[DB] 적재할 주문 없음"); return; }
-  if (process.env.DATABASE_URL) return syncViaPg(orderRows, itemsByExtId);
+  const dbUrl = getDbUrl();
+  if (dbUrl) return syncViaPg(orderRows, itemsByExtId, dbUrl);
   if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) return syncViaRest(orderRows, itemsByExtId);
   console.log("[DB] 환경변수(.env) 없음 → 적재 건너뜀 (CSV만 저장)");
 }
 
 // ── 방식 1: Postgres 직접 연결 (DATABASE_URL) ──
-async function syncViaPg(orderRows, itemsByExtId) {
+async function syncViaPg(orderRows, itemsByExtId, dbUrl) {
   let Client;
   try { ({ Client } = require("pg")); }
   catch (e) { console.log("[DB] pg 모듈이 없습니다. `npm install pg` 후 다시 실행하세요."); return; }
@@ -41,7 +47,7 @@ async function syncViaPg(orderRows, itemsByExtId) {
   for (const { ext, items } of itemsByExtId) itemsMap[ext] = items;
 
   const client = new Client({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: dbUrl,
     ssl: { rejectUnauthorized: false }, // Supabase 는 SSL 필요
   });
 
