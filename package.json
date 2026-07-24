@@ -1,0 +1,13 @@
+{
+  "name": "coupang-eats-export",
+  "version": "1.0.0",
+  "description": "쿠팡이츠 사장님 포털 매출 내역 자동 추출 (JSON -> CSV)",
+  "main": "export_sales.js",
+  "scripts": {
+    "start": "node export_sales.js",
+    "yesterday": "node export_sales.js --days 1"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}
