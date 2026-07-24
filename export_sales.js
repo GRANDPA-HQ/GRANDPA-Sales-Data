@@ -23,6 +23,7 @@ const fs = require("fs");
 const path = require("path");
 const readline = require("readline");
 const { chromium } = require("playwright");
+const { loadEnv, syncToSupabase } = require("./supabase");
 
 // ─────────────────────────────────────────────────────────────
 // 설정
@@ -252,6 +253,7 @@ function ask(question) {
 // 메인
 // ─────────────────────────────────────────────────────────────
 (async () => {
+  loadEnv(__dirname); // .env 로드 (Supabase 설정)
   const args = parseArgs(process.argv);
   const [startD, endD] = parseRange(args);
   args.startMs = dayStartMs(startD);
@@ -319,7 +321,45 @@ function ask(question) {
   console.log(`[주문 수집] ${orders.length}건`);
   console.log(`[JSON] ${rawPath}`);
   console.log(`[CSV ] ${csvPath}`);
+
+  // 3) Supabase 자동 적재 (.env 설정 시)
+  await pushToSupabase(orders);
 })().catch((e) => {
   console.error("오류:", e);
   process.exit(1);
 });
+
+// ─────────────────────────────────────────────────────────────
+// Supabase 적재: 주문/품목을 스키마에 맞게 변환 후 UPSERT
+// ─────────────────────────────────────────────────────────────
+async function pushToSupabase(orders) {
+  const platform = "coupang_eats";
+  const extId = (o) => o.uniqueOrderId || String(o.orderId);
+  const orderRows = orders.map((o) => {
+    const settle = o.orderSettlement || {};
+    return {
+      platform,
+      external_order_id: extId(o),
+      order_number: o.abbrOrderId || null,
+      order_datetime: o.createdAt ? new Date(o.createdAt).toISOString() : null,
+      status: o.status || "UNKNOWN",
+      total_amount: o.totalAmount ?? null,
+      settlement_amount: o.actuallyAmount ?? null,
+      discount_amount: o.discountPrice ?? 0,
+      commission_amount: settle.commissionTotal ?? 0,
+      raw: o,
+    };
+  });
+  const itemsByExtId = orders.map((o) => ({
+    ext: `${platform}|${extId(o)}`,
+    items: (o.items || []).map((it) => ({
+      raw_name: it.name || "",
+      quantity: it.quantity ?? 0,
+      unit_price: it.unitSalePrice ?? null,
+      subtotal: it.subTotalPrice ?? null,
+      is_canceled: false,
+      options: it.itemOptions ?? null,
+    })),
+  }));
+  await syncToSupabase(orderRows, itemsByExtId);
+}

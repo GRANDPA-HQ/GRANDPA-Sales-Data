@@ -8,6 +8,7 @@
     "yesterday": "node export_sales.js --days 1"
   },
   "dependencies": {
+    "pg": "^8.22.0",
     "playwright": "^1.48.0"
   }
 }

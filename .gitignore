@@ -1,3 +1,9 @@
+# 환경변수 (Supabase 접속정보 - 절대 커밋 금지)
+.env
+
+# IDE
+.idea/
+
 # 의존성
 node_modules/
 
