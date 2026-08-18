@@ -51,27 +51,38 @@
   th, td { border: 1px solid #dbe2ec; padding: 7px 10px; text-align: left; vertical-align: top; }
   th { background: #eef4ff; color: #16324f; font-weight: 700; }
   .file { font-family: Consolas, monospace; color: #0b2447; }
+  .badge {
+    display: inline-block; font-size: 8.5pt; font-weight: 700; color: #fff;
+    border-radius: 4px; padding: 2px 7px; margin-right: 6px; vertical-align: middle;
+  }
+  .b1 { background: #0064ff; }
+  .b2 { background: #ff7a00; }
+  .b3 { background: #00a67e; }
   .avoid-break { page-break-inside: avoid; }
+  .page-break { page-break-before: always; }
   .footer { margin-top: 28px; padding-top: 10px; border-top: 1px solid #e1e7f0; color: #8a95a3; font-size: 9pt; }
 </style>
 </head>
 <body>
 
   <div class="brandbar"></div>
-  <h1>쿠팡이츠 매출 자동 추출 프로그램</h1>
-  <p class="subtitle">사용 설명서 · 매출관리 데이터를 CSV로 자동 저장</p>
+  <h1>매출 자동 추출 프로그램</h1>
+  <p class="subtitle">쿠팡이츠 · 쿠팡포스 · 배민셀프서비스 통합 · 사용 설명서</p>
 
   <h2>1. 이 프로그램은 무엇인가요?</h2>
   <p>
-    쿠팡이츠 사장님 포털의 <strong>매출관리</strong> 화면에 있는 주문·매출 내역을
-    버튼 한 번으로 <strong>엑셀용 CSV 파일</strong>과 원본 JSON으로 저장해 주는 프로그램입니다.
+    <span class="badge b1">쿠팡이츠</span><span class="badge b2">쿠팡포스</span><span class="badge b3">배민</span>
+    세 채널의 매출·주문 내역을 실행파일 <strong>하나</strong>로 순서대로 자동 추출해
+    <strong>CSV 파일</strong>로 저장해 주는 프로그램입니다. 원하면 Supabase 데이터베이스에도 자동으로 적재됩니다.
   </p>
   <div class="box avoid-break">
     <strong>동작 방식</strong>
     <ul>
       <li>실제 크롬 브라우저를 자동으로 구동해, 평소 사장님이 직접 조회하던 것과 똑같은 방식으로 데이터를 가져옵니다.</li>
-      <li>한 번 로그인하면 세션이 저장되어, 다음부터는 자동 로그인 상태로 바로 조회됩니다.</li>
+      <li>채널별로 한 번만 로그인하면 세션이 저장되어, 다음부터는 자동 로그인 상태로 바로 조회됩니다.</li>
       <li>차단을 우회하는 것이 아니라, <strong>본인 매장 데이터를 본인이 조회</strong>하는 것을 자동화한 것입니다.</li>
+      <li><span class="file">전체_매출추출.bat</span> 하나만 실행하면 기간을 한 번 선택한 뒤
+        <strong>쿠팡이츠 → 쿠팡포스 → 배민</strong> 순서로 이어서 추출합니다.</li>
     </ul>
   </div>
 
@@ -81,33 +92,45 @@
   <p>이 PC에는 이미 Node.js가 설치되어 있습니다. (없는 다른 PC에서 쓰려면
      <code>nodejs.org</code> 에서 설치)</p>
 
-  <h3>② 첫 실행 &amp; 로그인</h3>
+  <h3>② 첫 실행 &amp; 채널별 로그인</h3>
   <div class="step">
     <div class="num">1</div>
-    <div class="step-body"><span class="file">쿠팡이츠_매출추출.bat</span> 파일을 <strong>더블클릭</strong>합니다.
-      <br>(처음에는 필요한 구성요소를 자동 설치하므로 1~2분 걸릴 수 있습니다.)</div>
+    <div class="step-body"><span class="file">전체_매출추출.bat</span> 파일을 <strong>더블클릭</strong>합니다.
+      <br>(처음에는 각 폴더에 필요한 구성요소를 자동 설치하므로 몇 분 걸릴 수 있습니다.)</div>
   </div>
   <div class="step">
     <div class="num">2</div>
-    <div class="step-body">크롬 창이 뜨고 로그인 화면이 나오면 <strong>직접 로그인</strong>합니다.</div>
+    <div class="step-body">기간 선택 창이 뜨면 원하는 기간을 고르고 <strong>[추출하기]</strong>를 누릅니다.
+      (이 기간은 세 채널 모두에 동일하게 적용됩니다.)</div>
   </div>
   <div class="step">
     <div class="num">3</div>
-    <div class="step-body">로그인 후 매출관리 페이지가 보이면, 검은색 명령창으로 돌아와 <strong>Enter</strong>를 누릅니다.</div>
+    <div class="step-body">
+      <strong>[1/3] 쿠팡이츠</strong> 단계에서 크롬 창이 뜨면 <strong>직접 로그인</strong>합니다.
+      로그인 후 매출관리 페이지가 보이면 검은 명령창으로 돌아와 <strong>Enter</strong>를 누릅니다.
+    </div>
+  </div>
+  <div class="step">
+    <div class="num">4</div>
+    <div class="step-body">
+      이어서 <strong>[2/3] 쿠팡포스</strong>, <strong>[3/3] 배민</strong> 단계에서도 같은 방식으로
+      크롬 창이 뜨면 그 채널 계정으로 로그인 → 명령창에서 Enter를 반복합니다.
+    </div>
   </div>
   <div class="tip">
-    이때 로그인 정보가 <span class="file">coupang_profile</span> 폴더에 저장되어,
+    각 채널의 로그인 정보는 채널별 폴더 안의 <span class="file">coupang_profile</span> /
+    <span class="file">coupos_profile</span> / <span class="file">baemin_profile</span> 폴더에 저장되어,
     다음부터는 로그인 없이 바로 사용할 수 있습니다.
   </div>
 
   <h2>3. 평소 사용법</h2>
   <div class="step">
     <div class="num">1</div>
-    <div class="step-body"><span class="file">쿠팡이츠_매출추출.bat</span> 더블클릭</div>
+    <div class="step-body"><span class="file">전체_매출추출.bat</span> 더블클릭</div>
   </div>
   <div class="step">
     <div class="num">2</div>
-    <div class="step-body"><strong>기간 선택 창</strong>이 뜹니다.
+    <div class="step-body"><strong>기간 선택 창</strong>이 딱 한 번 뜹니다.
       <ul>
         <li>달력에서 <strong>시작일 / 종료일</strong>을 직접 지정</li>
         <li>또는 빠른 버튼: <code>오늘</code> <code>어제</code> <code>최근 7일</code> <code>최근 30일</code></li>
@@ -116,24 +139,65 @@
   </div>
   <div class="step">
     <div class="num">3</div>
-    <div class="step-body"><strong>[추출하기]</strong> 클릭 → 해당 기간 데이터가 저장됩니다.</div>
+    <div class="step-body">
+      <strong>[추출하기]</strong> 클릭 → <strong>[1/3] 쿠팡이츠 → [2/3] 쿠팡포스 → [3/3] 배민</strong>
+      순서로 자동 진행되며, 채널별로 진행 상황이 명령창에 표시됩니다.
+    </div>
+  </div>
+  <div class="step">
+    <div class="num">4</div>
+    <div class="step-body">세 채널 모두 끝나면 완료 메시지와 함께 세 개의 결과 폴더가 자동으로 열립니다.</div>
   </div>
   <div class="note">
     <strong>선택하지 않으면?</strong> 창을 그냥 닫거나 [취소]를 누르면
     자동으로 <strong>오늘 날짜</strong> 매출을 불러옵니다.
   </div>
+  <div class="note">
+    <strong>한 채널만 뽑고 싶다면?</strong> 각 폴더 안의 개별 실행파일을 써도 됩니다.
+    (아래 "7. 폴더 구성" 참고)
+  </div>
 
   <h2>4. 결과 파일</h2>
-  <p>추출이 끝나면 <span class="file">output</span> 폴더가 자동으로 열립니다. 파일 두 개가 생성됩니다.</p>
+  <p>추출이 끝나면 채널별 <span class="file">output</span> 폴더가 자동으로 열립니다.</p>
   <table class="avoid-break">
-    <tr><th>파일</th><th>설명</th></tr>
-    <tr><td class="file">coupangeats_sales_기간.csv</td><td>엑셀에서 바로 여는 표 형식 (한글 안 깨짐)</td></tr>
-    <tr><td class="file">coupangeats_raw_기간.json</td><td>가공 전 원본 데이터 전체 (백업·분석용)</td></tr>
+    <tr><th>채널</th><th>폴더</th><th>파일</th><th>설명</th></tr>
+    <tr>
+      <td><span class="badge b1">쿠팡이츠</span></td>
+      <td class="file">output/</td>
+      <td class="file">coupangeats_sales_기간.csv<br>coupangeats_raw_기간.json</td>
+      <td>표 형식 CSV (엑셀 바로 열기) + 원본 JSON 백업</td>
+    </tr>
+    <tr>
+      <td><span class="badge b2">쿠팡포스</span></td>
+      <td class="file">coupang-pos-export-node/output/</td>
+      <td class="file">pos_transactions_시각.xlsx<br>pos_transactions_시각.csv</td>
+      <td>포스 원본 엑셀 + CSV 변환본</td>
+    </tr>
+    <tr>
+      <td><span class="badge b3">배민</span></td>
+      <td class="file">baemin-self-export-node/output/</td>
+      <td class="file">baemin_orders_시각.csv<br>baemin_raw_시각.json</td>
+      <td>주문일시·주문번호·메뉴·주문금액 CSV + 원본 JSON 백업</td>
+    </tr>
   </table>
-  <p><strong>CSV 주요 항목:</strong> 주문일시 · 주문번호 · 상태 · 메뉴 · 주문금액 · 실지급액 ·
-     판매가 · 할인액 · 취소금액 · 수수료합계 · 수수료VAT · 리뷰평점 · 요청사항</p>
 
-  <h2>5. 매일 자동 실행 (선택)</h2>
+  <h2>5. Supabase 자동 적재 (선택)</h2>
+  <p>
+    메인 폴더의 <span class="file">.env</span> 파일 하나에 <code>SUPABASE_URL</code>,
+    <code>SUPABASE_SERVICE_ROLE_KEY</code>를 설정해 두면, 세 채널 모두 추출과 동시에
+    Supabase 데이터베이스에도 자동으로 저장됩니다.
+  </p>
+  <div class="box avoid-break">
+    <ul>
+      <li><span class="file">.env</span>는 <strong>메인 폴더에 하나만</strong> 두면 됩니다.
+        쿠팡포스·배민 하위 폴더는 자기 폴더에 <span class="file">.env</span>가 없으면
+        자동으로 상위(메인) 폴더의 <span class="file">.env</span>를 찾아 사용합니다.</li>
+      <li><span class="file">.env</span>가 없어도 프로그램은 정상 동작하며, 이 경우 CSV 파일만 저장되고
+        DB 적재는 건너뜁니다 (오류 아님).</li>
+    </ul>
+  </div>
+
+  <h2>6. 매일 자동 실행 (선택)</h2>
   <p>정해진 시간에 자동으로 어제 매출을 저장하려면 Windows <strong>작업 스케줄러</strong>에 등록하세요.</p>
   <ol>
     <li>시작 메뉴에서 <strong>작업 스케줄러</strong> 실행 → <strong>기본 작업 만들기</strong></li>
@@ -141,43 +205,58 @@
     <li>동작: <strong>프로그램 시작</strong> → 프로그램에 <span class="file">run_daily.bat</span> 경로 지정</li>
     <li>완료. 창 없이 조용히 실행되어 <span class="file">output</span> 폴더에 저장됩니다.</li>
   </ol>
-  <div class="tip">먼저 "2. 최초 준비"의 로그인을 반드시 끝내둬야 자동 실행이 정상 동작합니다.</div>
+  <div class="note">
+    <span class="file">run_daily.bat</span>는 현재 <strong>쿠팡이츠</strong> 채널만 자동화합니다
+    (기간 선택 창 없이 조용히 실행되어야 하므로). 쿠팡포스·배민을 포함한 무인 자동 실행이 필요하면
+    별도로 요청해 주세요.
+  </div>
+  <div class="tip">먼저 "2. 최초 준비"의 채널별 로그인을 반드시 끝내둬야 자동 실행이 정상 동작합니다.</div>
 
-  <h2>6. 문제 해결</h2>
+  <div class="page-break"></div>
+
+  <h2>7. 폴더 구성</h2>
+  <table class="avoid-break">
+    <tr><th>파일 / 폴더</th><th>역할</th></tr>
+    <tr><td class="file">전체_매출추출.bat</td><td><strong>평소 사용</strong> — 더블클릭하면 세 채널을 순서대로 한 번에 추출</td></tr>
+    <tr><td class="file">.env</td><td>Supabase 접속 정보 (세 채널 공용, 1개만 존재)</td></tr>
+    <tr><td class="file">run_daily.bat</td><td>작업 스케줄러 자동 실행용 (쿠팡이츠만)</td></tr>
+    <tr><td class="file">쿠팡이츠_매출추출.bat</td><td>쿠팡이츠만 따로 추출하고 싶을 때</td></tr>
+    <tr><td class="file">export_sales.js / date_picker.ps1</td><td>쿠팡이츠 추출 프로그램 본체</td></tr>
+    <tr><td class="file">coupang_profile/</td><td>쿠팡이츠 로그인 세션 저장 (자동 생성 · 삭제 금지)</td></tr>
+    <tr><td class="file">output/</td><td>쿠팡이츠 결과 CSV·JSON 저장 폴더</td></tr>
+    <tr><td class="file">coupang-pos-export-node/</td><td>쿠팡포스 채널 전체 (실행파일·프로필·output 포함)</td></tr>
+    <tr><td class="file">baemin-self-export-node/</td><td>배민 채널 전체 (실행파일·프로필·output 포함)</td></tr>
+  </table>
+
+  <h2>8. 문제 해결</h2>
   <table class="avoid-break">
     <tr><th>증상</th><th>해결</th></tr>
     <tr>
-      <td>CSV가 안 생기고 <code>status=403</code> 표시</td>
-      <td>저장된 로그인 세션이 만료된 것입니다. <span class="file">쿠팡이츠_매출추출.bat</span>을
-          다시 실행해 크롬 창에서 재로그인하면 됩니다.</td>
+      <td>특정 채널 단계에서 CSV가 안 생기고 <code>403</code> 등 오류 표시</td>
+      <td>해당 채널의 로그인 세션이 만료된 것입니다. 그 채널 폴더의 개별 실행파일
+          (예: <span class="file">쿠팡포스_매출추출.bat</span>)을 실행해 크롬 창에서 재로그인하면 됩니다.</td>
     </tr>
     <tr>
       <td>기간 선택 창이 안 뜸</td>
-      <td>명령창을 닫고 <span class="file">쿠팡이츠_매출추출.bat</span>을 다시 더블클릭하세요.</td>
+      <td>명령창을 닫고 <span class="file">전체_매출추출.bat</span>을 다시 더블클릭하세요.</td>
     </tr>
     <tr>
       <td>"Node.js가 설치되어 있지 않습니다"</td>
       <td><code>nodejs.org</code>에서 Node.js 설치 후 다시 실행하세요.</td>
     </tr>
     <tr>
+      <td>"쿠팡포스/배민 폴더를 찾을 수 없습니다"</td>
+      <td><span class="file">coupang-pos-export-node</span>, <span class="file">baemin-self-export-node</span>
+          폴더가 <span class="file">전체_매출추출.bat</span>과 같은 위치에 있는지 확인하세요.</td>
+    </tr>
+    <tr>
       <td>다른 기간을 뽑고 싶음</td>
-      <td>기간 선택 창의 달력에서 시작일·종료일을 원하는 대로 지정하면 됩니다.</td>
+      <td>기간 선택 창의 달력에서 시작일·종료일을 원하는 대로 지정하면 되고, 세 채널 모두 같은 기간으로 추출됩니다.</td>
     </tr>
   </table>
 
-  <h2>7. 폴더 구성</h2>
-  <table class="avoid-break">
-    <tr><th>파일 / 폴더</th><th>역할</th></tr>
-    <tr><td class="file">쿠팡이츠_매출추출.bat</td><td>평소 사용 — 더블클릭하면 기간 선택 후 추출</td></tr>
-    <tr><td class="file">run_daily.bat</td><td>작업 스케줄러 자동 실행용</td></tr>
-    <tr><td class="file">date_picker.ps1</td><td>기간 선택 창 (자동 호출됨)</td></tr>
-    <tr><td class="file">export_sales.js</td><td>실제 데이터 추출 프로그램</td></tr>
-    <tr><td class="file">coupang_profile/</td><td>로그인 세션 저장 (자동 생성 · 삭제 금지)</td></tr>
-    <tr><td class="file">output/</td><td>결과 CSV·JSON 저장 폴더</td></tr>
-  </table>
-
   <div class="footer">
-    쿠팡이츠 매출 자동 추출 프로그램 · 사용 설명서 &nbsp;|&nbsp; 매장 ID 132379 · 그랜파 키친앤팜
+    매출 자동 추출 프로그램 (쿠팡이츠·쿠팡포스·배민) · 사용 설명서
   </div>
 
 </body>
