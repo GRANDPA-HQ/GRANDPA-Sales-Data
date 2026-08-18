@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 cd /d "%~dp0"
-title ÀüÃ¼ ¸ÅÃâ ÃßÃâ (ÄíÆÎÀÌÃ÷ -> ÄíÆÎÆ÷½º -> ¹è¹Î)
+title ÀüÃ¼ ¸ÅÃâ ÃßÃâ (ÄíÆÎÀÌÃ÷ -^> ÄíÆÎÆ÷½º -^> ¹è¹Î)
 
 set "COUPANG_EATS_DIR=%~dp0"
 set "COUPANG_POS_DIR=%~dp0coupang-pos-export-node"
