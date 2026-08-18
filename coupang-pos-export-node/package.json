@@ -1,0 +1,14 @@
+{
+  "name": "coupang-pos-export",
+  "version": "1.0.0",
+  "description": "쿠팡 포스(coupangpos.com) 매출 상세 내역 자동 추출 (엑셀 다운로드 -> CSV)",
+  "main": "export_transactions.js",
+  "scripts": {
+    "start": "node export_transactions.js",
+    "today": "node export_transactions.js"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0",
+    "xlsx": "^0.18.5"
+  }
+}

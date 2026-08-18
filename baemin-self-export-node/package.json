@@ -1,0 +1,14 @@
+{
+  "name": "baemin-self-export",
+  "version": "1.0.0",
+  "description": "배민셀프서비스 주문내역 자동 추출 (JSON -> CSV)",
+  "main": "export_baemin.js",
+  "scripts": {
+    "start": "node export_baemin.js",
+    "yesterday": "node export_baemin.js --days 1"
+  },
+  "dependencies": {
+    "pg": "^8.22.0",
+    "playwright": "^1.48.0"
+  }
+}
